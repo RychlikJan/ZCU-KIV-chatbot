@@ -13,8 +13,6 @@ import java.util.Map.Entry;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
@@ -118,6 +116,20 @@ public class GUIController {
 		}else if(!tf_userArea.getText().isEmpty()) {
 			actionWithTF();
 		}
+		if(rbOption > 7 && tfOption == 0) {
+			rb1.setVisible(false);
+			rb2.setVisible(false);
+			rb3.setVisible(false);
+			rb4.setVisible(false);
+			rb5.setVisible(false);
+			rb6.setVisible(false);
+			rb7.setVisible(false);
+			rb8.setVisible(false);
+			rb9.setVisible(false);
+			rb10.setVisible(false);
+			tf_userArea.setEditable(true);
+			ta_chatbotArea.appendText("Abychom mohli úspìšnì vytvoøit objednávku Vašeho vysnìného telefonu, jsou tøeba ještì Vaše osobní údaje. Zadejte prosím vaše køestní jméno\n\n");
+		}
 	}
 
 	private void actionWithTF() {	
@@ -125,22 +137,26 @@ public class GUIController {
 		case 0:
 			name = tf_userArea.getText();
 			tf_userArea.clear();
-			ta_chatbotArea.appendText("Jaké je vaše pøíjmení?\n");
+			ta_chatbotArea.appendText("Jaké je vaše pøíjmení?\n\n");
+			tfOption++;
 			break;
 		case 1:
 			lastName = tf_userArea.getText();
 			tf_userArea.clear();
-			ta_chatbotArea.appendText("Jaké je vaše telefonní èíslo?\n");
+			ta_chatbotArea.appendText("Jaké je vaše telefonní èíslo?\n\n");
+			tfOption++;
 			break;
 		case 2:
 			phoneNumber = tf_userArea.getText();
 			tf_userArea.clear();
-			ta_chatbotArea.appendText("Na jakou adresu chcete zboží zaslat?\n");
+			ta_chatbotArea.appendText("Na jakou adresu chcete zboží zaslat?\n\n");
+			tfOption++;
 			break;
 		case 3:
 			address = tf_userArea.getText();
 			tf_userArea.clear();
 			createOrder();
+			ta_chatbotArea.appendText("Gratuluju, Váš vysnìný telefon je objednán. V následujících dnech vám jej doruèí kurýr.\n\n");
 			break;
 		}
 
@@ -148,6 +164,10 @@ public class GUIController {
 
 	private void createOrder() {
 		// TODO Auto-generated method stub		
+		System.out.println("Jméno: " + name);
+		System.out.println("Pøíjmení: " + lastName);
+		System.out.println("Telefon: " + phoneNumber);
+		System.out.println("Adresa: " + address);
 	}
 
 	private void actionWithRB() {
@@ -271,6 +291,7 @@ public class GUIController {
 			}	
 			rb.getSelectedToggle().setSelected(false);
 			System.out.println(remainingNumberOfPhones);
+			rbOption++;
 			return;
 		
 		}
