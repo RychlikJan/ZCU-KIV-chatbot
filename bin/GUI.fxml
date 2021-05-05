@@ -8,10 +8,11 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="vBox" minHeight="375.0" minWidth="550.0" prefHeight="375.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.GUIController">
+<VBox fx:id="vBox" minHeight="375.0" minWidth="550.0" prefHeight="375.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.GUIController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -29,7 +30,7 @@
             <TextField fx:id="tf_userArea" layoutX="6.0" layoutY="250.0" onKeyPressed="#sendMessageEnter" prefHeight="25.0" prefWidth="389.0" />
             <Button fx:id="bsend" layoutX="157.0" layoutY="286.0" mnemonicParsing="false" onAction="#sendMessageButton" prefHeight="34.0" prefWidth="88.0" text="Send" />
             <Button fx:id="bupdate" layoutX="40" layoutY="286.0" mnemonicParsing="false" onAction="#updateData" prefHeight="34.0" prefWidth="88.0" text="Update Data" />
-            <RadioButton fx:id="rb1" layoutX="404.0" layoutY="6.0" mnemonicParsing="false" text="RadioButton" >
+            <RadioButton fx:id="rb1" layoutX="404.0" layoutY="6.0" mnemonicParsing="false" text="RadioButton">
                <toggleGroup>
                   <ToggleGroup fx:id="rb" />
                </toggleGroup></RadioButton>
@@ -69,6 +70,9 @@
          	   <toggleGroup>
                   <fx:reference source="rb" />
                </toggleGroup></RadioButton>
+            <ImageView fx:id="iv" fitHeight="226.0" fitWidth="288.0" layoutX="404.0" layoutY="8.0" onMouseClicked="#phoneView" pickOnBounds="true" preserveRatio="true" />
+            <Button fx:id="bleft" onAction="#left" layoutX="404.0" layoutY="263.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="73.0" text="Přechozí" />
+            <Button fx:id="bright" onAction="#right" layoutX="613.0" layoutY="263.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="73.0" text="Další" />
          </children>
     </AnchorPane>
   </children>

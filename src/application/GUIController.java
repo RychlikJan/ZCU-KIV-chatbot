@@ -1,5 +1,10 @@
 package application;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -19,8 +24,11 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
@@ -82,7 +90,17 @@ public class GUIController {
 
 	@FXML
 	private Button bupdate;
+	
+    @FXML
+    private ImageView iv;
 
+    @FXML
+    private Button bleft;
+
+    @FXML
+    private Button bright;
+
+    
 	private String heslo = "heslo";
 	private String name;
 	private String lastName;
@@ -93,9 +111,14 @@ public class GUIController {
 	private int[] options;
 	private int tfOption = 0;
 	private int rbOption = 0;
+	private int indexOfResult = 0;
 	private int remainingNumberOfPhones;
 	private boolean skip = false;
+	private ArrayList<Integer> result = new ArrayList<Integer>();
+	
 
+
+	
 	@FXML
 	void exit(ActionEvent event) {
 		Platform.exit();
@@ -104,8 +127,46 @@ public class GUIController {
 	@FXML
 	void restart(ActionEvent event) {
 		initialize();
+		tfOption = 0;
+		rbOption = 0;
+		indexOfResult = 0;
+		skip = false;
+		result.clear();
 	}
 
+	@FXML
+	void phoneView(MouseEvent event) {
+		try {
+		    Desktop.getDesktop().browse(new URL(xml.getPhones()[result.get(indexOfResult)][0][1]).toURI());
+		} catch (IOException e) {
+		    e.printStackTrace();
+		} catch (URISyntaxException e) {
+		    e.printStackTrace();
+		}
+	}
+	
+	@FXML
+	void left(ActionEvent event) {
+		indexOfResult--;
+		if(indexOfResult < 0) {
+			indexOfResult = result.size() - 1;
+		}
+		String url = xml.getPhones()[result.get(indexOfResult)][1][1];
+		Image image = new Image(url);
+		iv.setImage(image);
+	}
+	
+	@FXML
+	void right(ActionEvent event) {
+		indexOfResult++;
+		if(indexOfResult > result.size() - 1) {
+			indexOfResult = 0;
+		}
+		String url = xml.getPhones()[result.get(indexOfResult)][1][1];
+		Image image = new Image(url);
+		iv.setImage(image);
+	}
+	 
 	@FXML
 	void sendMessageButton(ActionEvent event) {
 		if(tf_userArea.getText().equals(heslo)) {
@@ -127,9 +188,40 @@ public class GUIController {
 			rb8.setVisible(false);
 			rb9.setVisible(false);
 			rb10.setVisible(false);
+			iv.setDisable(false);
+			iv.setVisible(true);
 			tf_userArea.setEditable(true);
-			ta_chatbotArea.appendText("Abychom mohli úspìšnì vytvoøit objednávku Vašeho vysnìného telefonu, jsou tøeba ještì Vaše osobní údaje. Zadejte prosím vaše køestní jméno\n\n");
+			bleft.setVisible(true);
+			bright.setVisible(true);
+			getResult();
+			ta_chatbotArea.appendText("Vybrali jsme vám " + result.size());
+			if(result.size() == 1) {
+				ta_chatbotArea.appendText("mobilní telefon.");
+			}else if(result.size() < 5) {
+				ta_chatbotArea.appendText("mobilní telefony. Pro výbìr mezi nimi použijte prosím tlaèítka \"Pøedchozí\" a \"Další\". ");
+			}else {
+				ta_chatbotArea.appendText("mobilních telefonù. Pro výbìr mezi nimi použijte prosím tlaèítka \"Pøedchozí\" a \"Další\". ");
+			}
+			ta_chatbotArea.appendText("Telefon, který vidíte bude objednán. Abychom mohli úspìšnì vytvoøit objednávku Vašeho vysnìného telefonu, jsou tøeba ještì Vaše osobní údaje. Zadejte prosím vaše køestní jméno\n\n");
 		}
+	}
+
+	
+	
+	public Button getBupdate() {
+		return bupdate;
+	}
+
+	private void getResult() {
+		for (int i = 0; i < options.length; i++) {
+			if (options[i] == 1) {
+				result.add(i);
+			}
+		}
+		String url = xml.getPhones()[result.get(indexOfResult)][1][1];
+		Image image = new Image(url);
+		iv.setImage(image);
+		
 	}
 
 	private void actionWithTF() {	
@@ -192,6 +284,11 @@ public class GUIController {
 				skip = false;
 			}else {
 				updateOptions("Konstrukce", rb.getSelectedToggle().getUserData().toString());
+				if(remainingNumberOfPhones == 1) {
+					rbOption = Integer.MAX_VALUE;
+					System.out.println(remainingNumberOfPhones);
+					break;
+				}
 			}
 			findOptions("Výrobce");
 			if(rbButtons[0] == null) {
@@ -208,6 +305,11 @@ public class GUIController {
 				skip = false;
 			}else {
 				updateOptions("Výrobce", rb.getSelectedToggle().getUserData().toString());
+				if(remainingNumberOfPhones == 1) {
+					rbOption = Integer.MAX_VALUE;
+					System.out.println(remainingNumberOfPhones);
+					break;
+				}
 			}
 			findOptions("Rozlišení displeje");
 			if(rbButtons[0] == null) {
@@ -224,6 +326,11 @@ public class GUIController {
 				skip = false;
 			}else {
 				updateOptions("Rozlišení displeje", rb.getSelectedToggle().getUserData().toString());
+				if(remainingNumberOfPhones == 1) {
+					rbOption = Integer.MAX_VALUE;
+					System.out.println(remainingNumberOfPhones);
+					break;
+				}
 			}
 			findOptions("Rozlišení fotoaparátu");
 			if(rbButtons[0] == null) {
@@ -240,6 +347,11 @@ public class GUIController {
 				skip = false;
 			}else {
 				updateOptions("Rozlišení fotoaparátu", rb.getSelectedToggle().getUserData().toString());
+				if(remainingNumberOfPhones == 1) {
+					rbOption = Integer.MAX_VALUE;
+					System.out.println(remainingNumberOfPhones);
+					break;
+				}
 			}
 			findOptions("Pamì RAM");
 			if(rbButtons[0] == null) {
@@ -256,6 +368,11 @@ public class GUIController {
 				skip = false;
 			}else {
 				updateOptions("Pamì RAM", rb.getSelectedToggle().getUserData().toString());
+				if(remainingNumberOfPhones == 1) {
+					rbOption = Integer.MAX_VALUE;
+					System.out.println(remainingNumberOfPhones);
+					break;
+				}
 			}
 			findOptions("Kapacita baterie");
 			if(rbButtons[0] == null) {
@@ -272,6 +389,11 @@ public class GUIController {
 				skip = false;
 			}else {
 				updateOptions("Kapacita baterie", rb.getSelectedToggle().getUserData().toString());
+				if(remainingNumberOfPhones == 1) {
+					rbOption = Integer.MAX_VALUE;
+					System.out.println(remainingNumberOfPhones);
+					break;
+				}
 			}
 			findOptions("Typ displeje");
 			if(rbButtons[0] == null) {
@@ -305,6 +427,7 @@ public class GUIController {
 		System.out.println(remainingNumberOfPhones);
 		
 	}
+	
 
 	private void updateRB() {
 		rb1.setVisible(false);
@@ -501,7 +624,7 @@ public class GUIController {
 			bsend.fire();
 		}
 	}
-
+	
 	@FXML
 	void updateData(ActionEvent event) {
 		// TODO
@@ -513,7 +636,8 @@ public class GUIController {
 		bupdate.setVisible(false);
 		ta_chatbotArea.setEditable(false);
 		ta_chatbotArea.setWrapText(true);
-		ta_chatbotArea.appendText("Ahoj, já jsem ultra super výkoný chatbot pro objednávání telefonù. Chcete si s mojí pomocí koupit nìjaký telefon?\n\n");
+		ta_chatbotArea.clear();
+		ta_chatbotArea.appendText("Ahoj, já jsem ultra super výkonný chatbot pro objednávání telefonù. Chcete si s mojí pomocí koupit nìjaký telefon?\n\n");
 		rb1.setText("Ano");
 		rb2.setText("Ne");
 		rb1.setVisible(true);
@@ -537,8 +661,11 @@ public class GUIController {
 		rb10.setVisible(false);
 		rb10.setSelected(false);
 		tf_userArea.setEditable(false);
+		bleft.setVisible(false);
+		bright.setVisible(false);
+		iv.setDisable(true);
+		iv.setVisible(false);
 		initPhones();
-
 	}
 
 	private void initPhones() {
@@ -549,7 +676,11 @@ public class GUIController {
 		remainingNumberOfPhones = options.length;
 		System.out.println(remainingNumberOfPhones);
 	}
-
+	@FXML
+	public void admin() {
+		bupdate.setVisible(true);;
+	}
+	
 	public String getName() {
 		return name;
 	}
