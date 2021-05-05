@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox minHeight="375.0" minWidth="550.0" prefHeight="375.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.GUIController">
+<VBox fx:id="vBox" minHeight="375.0" minWidth="550.0" prefHeight="375.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.GUIController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -23,7 +23,7 @@
         </Menu>
       </menus>
     </MenuBar>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="366.0" prefWidth="550.0" VBox.vgrow="ALWAYS">
+    <AnchorPane fx:id="ap" maxHeight="-1.0" maxWidth="-1.0" prefHeight="366.0" prefWidth="550.0" VBox.vgrow="ALWAYS">
          <children>
             <TextArea fx:id="ta_chatbotArea" layoutX="6.0" layoutY="6.0" prefHeight="232.0" prefWidth="389.0" />
             <TextField fx:id="tf_userArea" layoutX="6.0" layoutY="250.0" onKeyPressed="#sendMessageEnter" prefHeight="25.0" prefWidth="389.0" />

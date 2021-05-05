@@ -44,6 +44,7 @@ public class XMLReader {
 	          
 	          int maxNumberOfAttributes = 0;
 	          
+	          
 	          for (int temp = 0; temp < list.getLength(); temp++) {
 	              Node node = list.item(temp);
 	              if (node.getNodeType() == Node.ELEMENT_NODE) {
@@ -53,7 +54,6 @@ public class XMLReader {
 	                  }
 	              }
 	          }
-	          
 	          
 	          phones = new String[list.getLength()][maxNumberOfAttributes][2];
 	          
