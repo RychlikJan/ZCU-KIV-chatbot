@@ -129,8 +129,10 @@ public class GUIController {
         rb9.setVisible(false);
         rb10.setVisible(false);
         tf_userArea.setEditable(false);
-    
+        
+
     }
+    
     
 
 }
