@@ -238,10 +238,6 @@ public class Main {
         price = price.replace("&nbsp;","");
         price = price.replace("Kč","");
         price = price.replace(" ","");
-        if(price.length() == 0){
-            System.out.println("cena neznama");
-            price="Neuvedena";
-        }
         //System.out.println("fulpage:"+fullPage);
         reworkXML(fullPage, urlString,picUrl,price);
     }
