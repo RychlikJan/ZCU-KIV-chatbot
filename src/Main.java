@@ -72,7 +72,7 @@ public class Main {
 
     }
 
-    public static void reworkXML(String xmlFile, String url, String picUrl) throws Exception {
+    public static void reworkXML(String xmlFile, String url, String picUrl, String price) throws Exception {
         Document doc = convertStringToXMLDocument(xmlFile);
         removeAll(doc, Node.ELEMENT_NODE, "p");
         removeAll(doc, Node.ELEMENT_NODE, "h3");
@@ -80,26 +80,48 @@ public class Main {
         removeAll(doc, Node.ELEMENT_NODE, "button");
         //removeAll(doc, Node.ELEMENT_NODE, "a");
         params = new ArrayList<>();
+        params.add("Nazev");
+        params.add(getName(url));
         params.add("url");
         params.add(url);
         params.add("imgUrl");
         params.add(picUrl);
+        params.add("cena");
+        params.add(price);
         parseDocument(doc.getDocumentElement());
         String out = "section" + ", ";
         for (String s2:params ) {
-            out = out + s2 +", ";
+            out = out + s2 +",";
         }
         System.out.println(out);
         saveToXML();
     }
+
+    private static String getName(String url) {
+        String name = "";
+        String[] urlArray = url.split("/");
+        name = urlArray[urlArray.length-2];
+
+        String[] namesPart = name.split("-");
+        name = "";
+        for (String s:namesPart){
+            name=name+  s +" ";
+        }
+        System.out.println(name);
+        return name;
+    }
+
     public  static void saveToXML(){
         Element root = finalDocument.getDocumentElement();
         Element phone = finalDocument.createElement("phone");
+        String value;
+
 
 
         for(int i = 0; i < params.size();i++){
-            Element element = finalDocument.createElement("attriut");
-            element.appendChild(finalDocument.createTextNode(params.get(i)));
+            Element element = finalDocument.createElement("attribute");
+            value = params.get(i);
+            element.appendChild(finalDocument.createTextNode(value));
             phone.appendChild(element);
         }
         root.appendChild(phone);
@@ -125,6 +147,11 @@ public class Main {
             for(String s1 : s){
                 if(s1.replace(" ","").length() != 0){
                     String finalString =  s1.replace("  ","");
+                    StringBuilder sb = new StringBuilder(finalString);
+                    while(finalString.charAt(0)==' '){
+                        sb.deleteCharAt(0);
+                        finalString = sb.toString();
+                    }
                     params.add(finalString);
                 }
             }
@@ -168,6 +195,8 @@ public class Main {
         String line;
         String fullPage = "";
         boolean counter =false;
+        int counter2 = 0;
+        String price = "";
 
         try {
             url = new URL(urlString);
@@ -175,6 +204,14 @@ public class Main {
             br = new BufferedReader(new InputStreamReader(is));
 
             while ((line = br.readLine()) != null) {
+                counter2--;
+                //System.out.println(line);
+                if(line.equals("    <span class=\"c-product-top-offer__price u-gamma \">")){
+                    counter2 = 3;
+                }
+                if(counter2 == 1){
+                    price = line;
+                }
                 //line =line.replace(" ","");
                 if(line.equals("    <div class=\"o-layout__item c-parameters\">")){
                     counter=true;
@@ -198,8 +235,11 @@ public class Main {
                 // nothing to see here
             }
         }
+        price = price.replace("&nbsp;","");
+        price = price.replace("Kč","");
+        price = price.replace(" ","");
         //System.out.println("fulpage:"+fullPage);
-        reworkXML(fullPage, urlString,picUrl);
+        reworkXML(fullPage, urlString,picUrl,price);
     }
 
 
@@ -236,6 +276,7 @@ public class Main {
             {
                 //Print each employee's detail
                 Element eElement = (Element) node;
+                //getName(eElement.getElementsByTagName("loc").item(0).getTextContent());
                 System.out.println("Location : "    + eElement.getElementsByTagName("loc").item(0).getTextContent());
                 String img ="";
                 if(eElement.getElementsByTagName("image:loc").item(0) != null) {
