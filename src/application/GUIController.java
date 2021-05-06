@@ -18,7 +18,9 @@ import java.util.Map.Entry;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
@@ -99,6 +101,15 @@ public class GUIController {
 
     @FXML
     private Button bright;
+    
+    @FXML
+    private Label price;
+
+    @FXML
+    private Label currentPrice;
+
+    @FXML
+    private Label phoneName;
 
     
 	private String heslo = "heslo";
@@ -137,7 +148,7 @@ public class GUIController {
 	@FXML
 	void phoneView(MouseEvent event) {
 		try {
-		    Desktop.getDesktop().browse(new URL(xml.getPhones()[result.get(indexOfResult)][0][1]).toURI());
+		    Desktop.getDesktop().browse(new URL(xml.getPhones()[result.get(indexOfResult)][1][1]).toURI());
 		} catch (IOException e) {
 		    e.printStackTrace();
 		} catch (URISyntaxException e) {
@@ -151,9 +162,20 @@ public class GUIController {
 		if(indexOfResult < 0) {
 			indexOfResult = result.size() - 1;
 		}
-		String url = xml.getPhones()[result.get(indexOfResult)][1][1];
+		String url = xml.getPhones()[result.get(indexOfResult)][2][1];
 		Image image = new Image(url);
 		iv.setImage(image);
+		currentPrice.setText(getPrice());
+		phoneName.setText(xml.getPhones()[result.get(indexOfResult)][0][1]);
+	}
+	
+	private String getPrice() {
+		for (int i = 0; i < xml.getPhones()[result.get(indexOfResult)].length; i++) {
+			if (xml.getPhones()[result.get(indexOfResult)][i][0].equals("cena")) {
+				return xml.getPhones()[result.get(indexOfResult)][i][1].toString();
+			}
+		}	
+		return "Neznámá";
 	}
 	
 	@FXML
@@ -162,9 +184,11 @@ public class GUIController {
 		if(indexOfResult > result.size() - 1) {
 			indexOfResult = 0;
 		}
-		String url = xml.getPhones()[result.get(indexOfResult)][1][1];
+		String url = xml.getPhones()[result.get(indexOfResult)][2][1];
 		Image image = new Image(url);
 		iv.setImage(image);
+		currentPrice.setText(getPrice());
+		phoneName.setText(xml.getPhones()[result.get(indexOfResult)][0][1]);
 	}
 	 
 	@FXML
@@ -193,14 +217,17 @@ public class GUIController {
 			tf_userArea.setEditable(true);
 			bleft.setVisible(true);
 			bright.setVisible(true);
+			price.setVisible(true);
+			currentPrice.setVisible(true);
+			phoneName.setVisible(true);
 			getResult();
 			ta_chatbotArea.appendText("Vybrali jsme vám " + result.size());
 			if(result.size() == 1) {
-				ta_chatbotArea.appendText("mobilní telefon.");
+				ta_chatbotArea.appendText(" mobilní telefon.");
 			}else if(result.size() < 5) {
-				ta_chatbotArea.appendText("mobilní telefony. Pro výbìr mezi nimi použijte prosím tlaèítka \"Pøedchozí\" a \"Další\". ");
+				ta_chatbotArea.appendText(" mobilní telefony. Pro výbìr mezi nimi použijte prosím tlaèítka \"Pøedchozí\" a \"Další\". ");
 			}else {
-				ta_chatbotArea.appendText("mobilních telefonù. Pro výbìr mezi nimi použijte prosím tlaèítka \"Pøedchozí\" a \"Další\". ");
+				ta_chatbotArea.appendText(" mobilních telefonù. Pro výbìr mezi nimi použijte prosím tlaèítka \"Pøedchozí\" a \"Další\". ");
 			}
 			ta_chatbotArea.appendText("Telefon, který vidíte bude objednán. Abychom mohli úspìšnì vytvoøit objednávku Vašeho vysnìného telefonu, jsou tøeba ještì Vaše osobní údaje. Zadejte prosím vaše køestní jméno\n\n");
 		}
@@ -218,9 +245,11 @@ public class GUIController {
 				result.add(i);
 			}
 		}
-		String url = xml.getPhones()[result.get(indexOfResult)][1][1];
+		String url = xml.getPhones()[result.get(indexOfResult)][2][1];
 		Image image = new Image(url);
 		iv.setImage(image);
+		currentPrice.setText(getPrice());
+		phoneName.setText(xml.getPhones()[result.get(indexOfResult)][0][1]);
 		
 	}
 
@@ -665,6 +694,10 @@ public class GUIController {
 		bright.setVisible(false);
 		iv.setDisable(true);
 		iv.setVisible(false);
+		price.setVisible(false);
+		currentPrice.setVisible(false);
+		phoneName.setVisible(false);
+		phoneName.setAlignment(Pos.CENTER);
 		initPhones();
 	}
 
