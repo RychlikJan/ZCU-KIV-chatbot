@@ -239,6 +239,7 @@ public class GUIController {
 		return bupdate;
 	}
 
+
 	private void getResult() {
 		for (int i = 0; i < options.length; i++) {
 			if (options[i] == 1) {
@@ -284,11 +285,13 @@ public class GUIController {
 	}
 
 	private void createOrder() {
-		// TODO Auto-generated method stub		
+		CreateOrder order = new CreateOrder(name,lastName,phoneName.getText(),address,phoneName.getText());
+		order.createNewOrder();
 		System.out.println("Jméno: " + name);
 		System.out.println("Pøíjmení: " + lastName);
 		System.out.println("Telefon: " + phoneNumber);
 		System.out.println("Adresa: " + address);
+		System.out.println("Order created!");
 	}
 
 	private void actionWithRB() {
@@ -656,13 +659,13 @@ public class GUIController {
 	
 	@FXML
 	void updateData(ActionEvent event) {
-		// TODO
+		GetData.getAllData();
 	}
 
 	@FXML
 	void initialize() {
 
-		bupdate.setVisible(false);
+		bupdate.setVisible(true);
 		ta_chatbotArea.setEditable(false);
 		ta_chatbotArea.setWrapText(true);
 		ta_chatbotArea.clear();
